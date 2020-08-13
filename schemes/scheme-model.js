@@ -12,6 +12,7 @@ module.exports = {
 
 function find() {
     return db('schemes')
+    
 }
 
 function findById(id) {
@@ -24,14 +25,33 @@ function findById(id) {
                 return scheme[0]
             }
         })
+        .catch(err => {
+            return err
+        })
 }
 
 function findSteps(id) {
-    return null
+    return db('steps')
+        .join('schemes', 'schemes.id', 'steps.scheme_id')
+        .where('steps.scheme_id', id)
+        .select('steps.id', 'schemes.scheme_name', 'steps.step_number', 'steps.instructions')
 }
 
 function add(scheme) {
-    return null
+    return db('schemes')
+        .insert(scheme)
+        .then(id => {
+            return findById(id)
+                .then(newScheme => {
+                    return newScheme
+                })
+                .catch(err => {
+                    return err
+                })
+        })
+        .catch(err => {
+            return err
+        })
 }
 
 function update(changes, id) {
