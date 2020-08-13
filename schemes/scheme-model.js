@@ -55,7 +55,23 @@ function add(scheme) {
 }
 
 function update(changes, id) {
-    return null
+    console.log(changes)
+    return db('schemes')
+        .where('id', id)
+        .update(changes, 'id')
+        .then(id => {
+            return findById(id)
+                .then(updatedScheme => {
+                    return updatedScheme
+                })
+                .catch(err => {
+                    return err
+                })
+        })
+        .catch(err => {
+            return err
+        })
+        
 }
 
 function remove(id) {
